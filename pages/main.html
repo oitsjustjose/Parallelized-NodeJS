@@ -103,7 +103,7 @@
             <h2>
                 Multi-Threaded NodeJS Server Test
             </h2>
-            <form action="/primes" method="POST">
+            <form action="/primes" method="POST" onkeydown="return event.key != 'Enter';">
                 <div class="labelled flex-form">
                     <label for="primes">How Many Primes to Create:</label>
                     <input name="primes" type="number" value="5" min="1" , max="10">

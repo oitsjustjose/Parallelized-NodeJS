@@ -15,7 +15,7 @@ const serial = require("./serial");
 const parallel = require("./parallel");
 
 app.get("/", (req, res) => {
-    res.render(path.join(__dirname, "pages/main.ejs"));
+    res.sendFile(path.join(__dirname, "pages/main.html"));
 });
 
 app.post("/primes", (req, res) => {

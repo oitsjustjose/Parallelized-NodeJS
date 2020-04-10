@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jose's Parallel Node Service</title>
+
+    <link rel="stylesheet" href="/main-light.css">
+    <style>
+        body {
+            margin: 0;
+        }
+
+        .flex-container {
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+
+        form {
+            max-width: 1024px;
+            margin: auto;
+        }
+    </style>
+
+    <script>
+        const updateWithData = (jsonData) => {
+            let results = document.getElementById("results");
+
+            results.style.display = "none";
+
+            document.getElementById("serial-time").innerText = jsonData.serial.time[1];
+            document.getElementById("parallel-time").innerText = jsonData.parallel.time[1];
+            results.style.display = "block";
+        };
+
+        window.addEventListener("DOMContentLoaded", (evt) => {
+            // Form Validation
+            let input = document.querySelector("input[type=number]");
+            input.addEventListener('change', () => {
+                let numPrimes = parseInt(input.value);
+                if (numPrimes < 1) {
+                    document.forms[0].primes.value = 1;
+                }
+                if (numPrimes > 10) {
+                    document.forms[0].primes.value = 10;
+                }
+            });
+
+            let submitBtn = document.getElementById("submitBtn");
+            submitBtn.addEventListener('click', (evt) => {
+                try {
+                    let numPrimes = parseInt(document.forms[0].primes.value);
+
+                    if (numPrimes < 1) {
+                        numPrimes = 1;
+                        document.forms[0].primes.value = 1;
+                    }
+                    if (numPrimes > 10) {
+                        numPrimes = 10;
+                        document.forms[0].primes.value = 10;
+                    }
+                    submitBtn.setAttribute("disabled", "");
+                    fetch(`/primes?num=${numPrimes}`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" }
+                    }).then(output => {
+                        if (output.status === 200) {
+                            output.json().then((data) => {
+                                updateWithData(data);
+                                submitBtn.removeAttribute("disabled");
+                            })
+                        }
+                    });
+                } catch (err) {
+                    console.log(err);
+                    alert("Invalid Number of Primes Given")
+                }
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div class="flex-container">
+        <div class="centered container">
+            <h2>
+                Multi-Threaded NodeJS Server Test
+            </h2>
+            <form action="/primes" method="POST">
+                <div class="labelled flex-form">
+                    <label for="primes">How Many Primes to Create:</label>
+                    <input name="primes" type="number" value="5" min="1" , max="10">
+                </div>
+            </form>
+            <p>
+                (The max is 10 due to server hardware constraints)
+            </p>
+            <button id="submitBtn">Submit</button>
+
+        </div>
+        <div class="centered container" id="results" style="display: none;">
+            <h2>Results</h2>
+            <p>
+                Serial Time: <span id="serial-time"></span>ns.
+            </p>
+            <p>
+                Parallel Time: <span id="parallel-time"></span>ns.
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

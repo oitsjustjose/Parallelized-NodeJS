@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jose's Parallel Node Service</title>
+
+    <link rel="stylesheet" href="/main-light.css">
+    <style>
+        body {
+            margin: 0;
+        }
+
+        .flex-container {
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            align-items: center;
+            justify-content: center;
+        }
+
+        form {
+            max-width: 1024px;
+            margin: auto;
+        }
+    </style>
+
+    <script>
+        window.addEventListener("DOMContentLoaded", (evt) => {
+            let results = document.getElementById("results");
+            let resJSON = location.href.substring(location.href.indexOf("results?json=") + 13, location.href.length);
+            results.innerText = JSON.stringify(resJSON);
+        });
+    </script>
+</head>
+
+<body>
+    <div class="flex-container">
+        <h2>
+            Multi-Threaded NodeJS Server Results
+        </h2>
+        <code class="centered code" id="results">
+                hi
+            </code>
+        <button class="blue" onclick="location.href='/'">Back</button>
+    </div>
+</body>
+
+</html>
